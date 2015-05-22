@@ -41,15 +41,13 @@ int main(){
     
     k0 = 1.; g = 1.45; alpha = g*g;alphabar = 0; q0 = 0.01; Fp = .5; 
     //  musm = 1.e3; mubg =1.e-28;
-    musm = 10.*pow(k0,6);  1.e-18;//instead of -13.. 10*pow(VIn->kn[0],6);                                                          
-    mubg = 10.*pow(k0*pow(g,NUM_shls_goy+NUM_shls_tree-1),-4); 1.e-24; // instead of -15;//100*pow(VIn->kn[VIn->Nshls-1],-4);            
+
     fi = 8;
     Nav = 1;
     
     
     tree.setupTree();
-    phys.setupPhysics(alpha,k0,g,alphabar,q0,mubg,musm,Fp,fi,tree); 
-    
+
     
     Dim = tree.Dim;
     NUM_shls_tree = tree.NUM_shls_tree ; // for the fierarchical part! 1 is teh minimum  makes it GOY shell model
@@ -60,7 +58,10 @@ int main(){
     N_nds_goy = NUM_shls_goy*((int) pow((double)Dim,NUM_shls_tree-1));  
     N_nds = N_nds_tree + N_nds_goy;
     
-    
+    musm = 10.*pow(k0,6);  1.e-18;//instead of -13.. 10*pow(VIn->kn[0],6);          
+    mubg = 10.*pow(k0*pow(g,NUM_shls_goy+NUM_shls_tree-1),-4); 1.e-24; // instead of -15;//100*pow(VIn->kn[VIn->Nshls-1],-4);                   
+
+   phys.setupPhysics(alpha,k0,g,alphabar,q0,mubg,musm,Fp,fi,tree); 
     //for(i=0;i<N_nds;i++)
     //   cout<<find_n(i)<<"\n";
     
