@@ -1,5 +1,4 @@
-//
-//  hrchl_tree.h
+///  hrchl_tree.h
 //  
 //
 //  Created by katy ghantous on 5/14/15.
@@ -47,9 +46,9 @@ public:
     
     int find_n(int i);
     void setupNodes();    
-    void setupTree();
-    void printTree(Physics phys); 
+    void setupTree(int DimIn, int NUM_tree, int NUM_goy);
     void delete_tree(); //frees all the nodes. 
+    void printTree(Physics phys,int gp,int p,int c,int gc);
     
     Tree();
     ~Tree();
@@ -85,6 +84,8 @@ struct ParamForODE{
 };
 
 int func_hmdsi(double t, const double y[], double dydt[], void *params);
+double get_data_NAME(FILE *someFile, const char * nameData);
+
 
 
 #endif
