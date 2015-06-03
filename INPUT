@@ -1,0 +1,74 @@
+
+				INPUT FILE
+
+
+----------------------------------------------
+---------------   Tree Model  ----------------
+---------------------------------------------
+
+Dimension			2
+
+Number of layers in tree	10  %%% set to 1 if you want the goy shell retrieved
+
+Number of layers as shell	19
+
+Minimum scale (k min)	1.
+
+Maximum scale (k max)	1305.
+
+
+extra	0
+
+-----------------------------
+------   2D TURBULENCE  -----
+-----------------------------
+
+musmFac	0.5 
+
+mubgFac	10.0
+
+fi shell	8
+
+forcing magnitude	0.5	
+
+extra	0
+
+
+---------------------------------------
+------  integration and openMP  -------
+---------------------------------------
+
+Num of threads  1
+
+dt	 0.01
+
+tmax	 200
+
+extra	0
+
+
+---------------------------------------
+------  plotting the results    -------
+---------------------------------------
+
+
+LastN   1000  (averages over the LastN instances of the simulation) <-->IMPORTANT<--> set to -1 if you want to specify with following parameters:  
+
+t1	2     (initial time to start averaging) 
+
+Nav	5  (Num of instances to average over) 
+
+extra	0
+
+
+
+
+
+
+
+
+					
+                                      end of file
+
+
+
