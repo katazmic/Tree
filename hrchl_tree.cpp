@@ -78,14 +78,14 @@ void Physics::setupPhysics(double alphai, double k0i, double gi, double alphabar
         
     }
     
-
-        
+    
+    
     
 }
 
 void Physics::delete_physics(){
     
-  
+    
     
     delete[] k_n;
     delete[] a_n;
@@ -132,7 +132,6 @@ void Tree::setupNodes(){
         nds[1].has_pr = 1;
     }
     
-    //  nds[0].idx = 0;
     
     for(n=1;n<NUM_shls_tree;n++){
         
@@ -186,11 +185,11 @@ void Tree::setupNodes(){
     
 };
 
-void Tree::setupTree(){
+void Tree::setupTree(int DimIn, int NUM_tree, int NUM_goy){
     
-    Dim = 2;
-    NUM_shls_tree = 9; // for the fierarchical part! 1 is teh minimum  makes it GOY shell model
-    NUM_shls_goy = 21; // total 30 for reasonable results. 
+    Dim = DimIn;
+    NUM_shls_tree = NUM_tree; // for the fierarchical part! 1 is teh minimum  makes it GOY shell model
+    NUM_shls_goy = NUM_goy; // total 30 for reasonable results. 
     
     //com from input
     N_nds_tree =  (int) ((int) pow( (double)Dim,(NUM_shls_tree))-1)/(Dim-1);
@@ -230,7 +229,7 @@ Tree::~Tree(){};
 
 
 
-void Tree::printTree(Physics phys){
+void Tree::printTree(Physics phys,int gp,int p,int c,int gc){
     
     int i,j,k,l;
     int NUM = NUM_shls_tree+NUM_shls_goy;
@@ -246,58 +245,64 @@ void Tree::printTree(Physics phys){
     }
     
     
-    /* 
-     
-     
-     cout<<" -- Parents -- \n ";
-     for(i=0;i<(NUM);i++){
-     cout<<"<<";
-     for(j=phys.k_idx_min[i];j<phys.k_idx_max[i]+1;j++)
-     cout<<(nds[j].has_pr==1?nds[j].i_pr:-1)<<" ";
-     cout<<">>\n";
-     }  cout<<" -- Grand Parents -- \n";
-     for(i=0;i<(NUM);i++){
-     cout<<"<<";
-     for(j=phys.k_idx_min[i];j<phys.k_idx_max[i]+1;j++)
-     cout<<(nds[nds[j].i_pr].has_pr==1?nds[nds[j].i_pr].i_pr:-1)<<" ";
-     cout<<">>\n";
-     }
-     */
-    
-    
-    cout<<" -- Children -- \n";
-    for(i=0;i<(NUM_shls_tree-1);i++){
-        cout<<"<<";
-        for(j=phys.k_idx_min[i];j<phys.k_idx_max[i]+1;j++){
-            cout<<"(";
-            for(k=0;k<Dim-1;k++)
-                cout<<(nds[j].has_ch==Dim?nds[j].i_ch[k]:-1)<<",";
-            cout<<(nds[j].has_ch==Dim?nds[j].i_ch[k]:-1)<<") ";}
-        cout<<">>\n";
-    }
-    for(i=NUM_shls_tree-1;i<(NUM_shls_goy+NUM_shls_tree);i++){
-        cout<<"<<";
-        for(j=phys.k_idx_min[i];j<phys.k_idx_max[i]+1;j++)
-            cout<<(nds[j].has_ch==1? nds[j].i_ch[0]:-1)<<" ";
+    if(p==1){
         
-        cout<<">>\n";
+        cout<<" -- Parents -- \n ";
+        for(i=0;i<(NUM);i++){
+            cout<<"<<";
+            for(j=phys.k_idx_min[i];j<phys.k_idx_max[i]+1;j++)
+                cout<<(nds[j].has_pr==1?nds[j].i_pr:-1)<<" ";
+            cout<<">>\n";
+        }  
     }
-    /*
-     cout<<" -- Grand Children -- \n";
-     for(i=0;i<(NUM_shls_tree);i++){
-     cout<<"<<";
-     
-     for(j=phys.k_idx_min[i];j<phys.k_idx_max[i]+1;j++){
-     cout<<"(";
-     for(l=0;l<Dim;l++){
-     for(k=0;k<Dim;k++){
-     ((l==Dim-1 && k==Dim-1)?cout<<(nds[nds[j].i_ch[l]].has_ch==1?nds[nds[j].i_ch[l]].i_ch[k]:-1):cout<<(nds[nds[j].i_ch[l]].has_ch==1?nds[nds[j].i_ch[l]].i_ch[k]:-1)<<",");
-     }
-     }
-     cout<<") ";}
-     cout<<">>\n";
-     }
-     */
+    
+    if(gp==1){
+        cout<<" -- Grand Parents -- \n";
+        for(i=0;i<(NUM);i++){
+            cout<<"<<";
+            for(j=phys.k_idx_min[i];j<phys.k_idx_max[i]+1;j++)
+                cout<<(nds[nds[j].i_pr].has_pr==1?nds[nds[j].i_pr].i_pr:-1)<<" ";
+            cout<<">>\n";
+        }
+    }
+    
+    if(c==1){
+        cout<<" -- Children -- \n";
+        for(i=0;i<(NUM_shls_tree-1);i++){
+            cout<<"<<";
+            for(j=phys.k_idx_min[i];j<phys.k_idx_max[i]+1;j++){
+                cout<<"(";
+                for(k=0;k<Dim-1;k++)
+                    cout<<(nds[j].has_ch==Dim?nds[j].i_ch[k]:-1)<<",";
+                cout<<(nds[j].has_ch==Dim?nds[j].i_ch[k]:-1)<<") ";}
+            cout<<">>\n";
+        }
+        for(i=NUM_shls_tree-1;i<(NUM_shls_goy+NUM_shls_tree);i++){
+            cout<<"<<";
+            for(j=phys.k_idx_min[i];j<phys.k_idx_max[i]+1;j++)
+                cout<<(nds[j].has_ch==1? nds[j].i_ch[0]:-1)<<" ";
+            
+            cout<<">>\n";
+        }
+    }
+    
+    if (gc==1){
+        
+        cout<<" -- Grand Children -- \n";
+        for(i=0;i<(NUM_shls_tree);i++){
+            cout<<"<<";
+            
+            for(j=phys.k_idx_min[i];j<phys.k_idx_max[i]+1;j++){
+                cout<<"(";
+                for(l=0;l<Dim;l++){
+                    for(k=0;k<Dim;k++){
+                        ((l==Dim-1 && k==Dim-1)?cout<<(nds[nds[j].i_ch[l]].has_ch==1?nds[nds[j].i_ch[l]].i_ch[k]:-1):cout<<(nds[nds[j].i_ch[l]].has_ch==1?nds[nds[j].i_ch[l]].i_ch[k]:-1)<<",");
+                    }
+                }
+                cout<<") ";}
+            cout<<">>\n";
+        }
+    }
 }
 
 
@@ -341,8 +346,6 @@ int func_hmdsi(double t, const double y[], double dydt[], void *params){
                 
                 for(j = 0; j< T->nds[i].has_ch;j++){
                     Cb  = Cb + 1./T->nds[i].has_ch*V->b_n[n]*(conj(phi[T->nds[i].i_pr])*conj(phi[T->nds[i].i_ch[j]]));
-                    //if(n==2)
-                    //cout<< i<<","<<n<<":"<<1./T->nds[i].has_ch<<"\n";//*V->b_n[n]*(conj(phi[T->nds[i].i_pr])*conj(phi[T->nds[i].i_ch[j]]))<<"\n";
                 }
             }
             
@@ -364,6 +367,7 @@ int func_hmdsi(double t, const double y[], double dydt[], void *params){
             frcng = ( (n==V->fi || n==V->fi+1) ?  V->Fp : 0);
             
             dphidt[i] = Ca+Cb+Cc+disp+frcng;
+            
         }
         
     }
@@ -372,3 +376,58 @@ int func_hmdsi(double t, const double y[], double dydt[], void *params){
 };
 
 
+double get_data_NAME(FILE *someFile, const char * nameData)
+{
+    double vlu;
+    int dataExists;
+    char dat;
+    int dg,i;
+    char data[20]; // = malloc(20*sizeof(char));                                                             
+    
+    dataExists = 0;
+    dat = fgetc(someFile);
+    
+    while(dat != EOF && dataExists == 0)
+    {
+        i=0;
+        dat = fgetc(someFile);
+        
+        if(dat == nameData[i])
+        {
+            while(dat == nameData[i])
+            {
+                dat = fgetc(someFile);
+                i++;
+            }
+            
+            if(nameData[i] == '\0')
+            {
+                dataExists = 1;
+            }
+        }
+    }
+    
+    dg =0;
+    dat = fgetc(someFile);
+    
+    while((dat == '\t') || (dat == ' '))
+    {
+        dat = fgetc(someFile);
+    }
+    while((dat != '\t') && (dat != ' ') && (dat != EOF) && (dat != '\0')  )
+    {
+        data[dg] = dat;
+        dat = fgetc(someFile);
+        dg++;
+    }
+    vlu =(double) atof(data);
+    
+    if(dataExists ==0){
+        printf("\n You goofed! Make sure the correct spelling of %s exists in the INPUT file. \n \n",nameData);
+        abort();
+    }
+    
+    return vlu;
+    
+    
+};
