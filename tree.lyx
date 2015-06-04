@@ -1,0 +1,506 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 2cm
+\rightmargin 2cm
+\bottommargin 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Hybrid Tree-Shell Model for Turbulence Cascades
+\end_layout
+
+\begin_layout Section
+Hybrid Tree-Goy model
+\end_layout
+
+\begin_layout Standard
+The tree model is an extension of the shell model to account for inhomogeneity
+ in space.
+ Akin to the wavelet analysis, the dynamical variables 
+\begin_inset Formula $\Phi_{n,N}$
+\end_inset
+
+ is defined for a given space and scale.
+ This model is proposed by Aurel (1994) and applied in (1997) on 2D fluid
+ turbulence.
+ We propose a hybrid tree-shell model that incorporates inhomogeneities
+ up to a certain sclae beyond which the homogeneity is assumed.
+ This results in a tree structure that tranistions from a hierarchical tree
+ to a set of shell models at different spatial points.
+ In addition to the hybrid aspet of the model, we introduce spatial diffusion.
+\end_layout
+
+\begin_layout Section
+Equation for Hybrid Tree-Goy shell model
+\end_layout
+
+\begin_layout Standard
+Instead of having one fourier value 
+\begin_inset Formula $\Phi_{n}$
+\end_inset
+
+ to quantify the strength at that scale, 
+\begin_inset Formula $\Phi_{n,i}$
+\end_inset
+
+ is used to specify the strength of the fourier component at a scale 
+\begin_inset Formula $n$
+\end_inset
+
+ in the 
+\begin_inset Formula $i$
+\end_inset
+
+th spatial location.
+ Figure shows the division and component representation in 2d turbulence,
+ while fig.
+ shows the 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename tree1D.png
+	lyxscale 10
+	width 2cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Representation of 
+\begin_inset Formula $\Phi_{n,i}$
+\end_inset
+
+ in 1d.
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "phi_1d"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename tree2D.png
+	lyxscale 10
+	width 5cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Representation of 
+\begin_inset Formula $\Phi_{n,i}$
+\end_inset
+
+ in 2d.
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "phi_2d"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Each compoenent interacts with the nearest components best represented in
+ a hierarchical tree os degree 
+\begin_inset Formula $D=2^{d}$
+\end_inset
+
+ where d is the spatial dimensions of tubrulence considered.
+ Akin to GOY shell model the interaction is 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\begin{array}[t]{c}
+\frac{\Phi_{n,i}}{dt}=a_{n}\Phi_{n-1,ceil(i/D)}\Phi_{n-2,ceil(i/D^{2})}+b_{n}\Phi_{n-1,ceil(i/D)}\frac{\sum_{k}\Phi_{n+1,k}}{D}+c_{n}\\
++c_{n}\frac{\sum_{k=(i-1)*D:i*D}\Phi_{n+1,k}}{D}\frac{\sum_{k=(i-1)*D^{2}:i*D^{2}}\Phi_{n+2,k}}{D^{2}}
+\end{array}\label{eq:int}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For a given node in the part of the tree structure, the node interacts with
+ its parent, grandparent, children and all its grandchildren accoding to
+ Eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:int"
+
+\end_inset
+
+.
+ We represent the interactions graphically in figs.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "int_intree"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "int_interfaceTree"
+
+\end_inset
+
+ for a binary tree modeling 1d turbulence.
+ The node in solid red and all the nodes it interacts with with solid borders
+ both when the node and all its nearest neighbors are completely in the
+ tree structure (fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "int_intree"
+
+\end_inset
+
+) and when the node is near the interface (fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "int_interfaceTree"
+
+\end_inset
+
+) where it has neighbors both within the tree and the peripheral parts that
+ are a shell model.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename treeM_int_tree.png
+	lyxscale 10
+	width 9cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+interactions for nodes within the hierarchical tree of a hybrid hierarchical
+ tree
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "int_intree"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename treeMulti_zoom.png
+	lyxscale 10
+	width 9cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+interactions for nodes near the interface of the tree and shell parts of
+ a hybrid hierarchical tree
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "int_interfaceTree"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+2D fluid turbulence 
+\end_layout
+
+\begin_layout Subsubsection
+Coefficients 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+a_{n}=\alpha k_{n}^{4}\frac{g^{2}-1}{g^{7}(k_{n}+1)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+b_{n}=-\alpha k_{n}^{4}\frac{g^{4}-1}{g^{4}(k_{n}+1)}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+c_{n}=\alpha k_{n}^{4}\frac{g^{2}-1}{g^{7}(k_{n}+1)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Benchmarking
+\end_layout
+
+\begin_layout Standard
+To benchmark the hierarchical tree model, we compare the results for homogeneous
+ 2D turbulence resulting from tree model.
+ Below is the result for choosing 10 levels in teh tree and 19 levels for
+ the shell after that for a total of 29 scales.
+ The system is forced at the 8th scale in a homogeous way (all shells at
+ the 8th scale are forced) and there is a dissipation at the small and large
+ scales.
+ The hierarchical tree structure captures the inverse cascade of enstropy
+ better then the convensional shell model.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename resTree10.png
+	lyxscale 50
+	width 12cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Benchmarking the hybrid tree-shell model in teh case of homogeneous 2d turbulenc
+e.
+ The blue does are the averaged 
+\begin_inset Formula $\Phi_{n,i}^{2}$
+\end_inset
+
+ for all 
+\begin_inset Formula $i$
+\end_inset
+
+ at a given scale 
+\begin_inset Formula $n$
+\end_inset
+
+ over 1000 runs, the green line is 
+\begin_inset Formula $k^{-8/3}$
+\end_inset
+
+ and the red line is 
+\begin_inset Formula $k^{-4}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Diffusion in Wavelet form
+\end_layout
+
+\end_body
+\end_document
