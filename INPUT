@@ -31,6 +31,10 @@ fi shell	8
 
 forcing magnitude	0.5	
 
+frac_fr			0.25
+
+frac_fr_begins		0.25
+
 extra	0
 
 
