@@ -16,7 +16,7 @@ using namespace std;
 
 Physics::Physics(){};
 
-void Physics::setupPhysics(double alphai, double k0i, double gi, double alphabari, double q0i, double mubgi, double musmi, double Fpi, int fii,Tree tree){
+void Physics::setupPhysics(double alphai, double k0i, double gi, double alphabari, double q0i, double mubgi, double musmi, double Fpi,double fracFri,double fracFr_begi, int fii,Tree tree){
     
     int n;
     int Bs = 0;
@@ -47,7 +47,9 @@ void Physics::setupPhysics(double alphai, double k0i, double gi, double alphabar
     musm = musmi;
     
     fi = fii;
-    Fp = Fpi;    
+    Fp = Fpi;  
+    fracFr = fracFri;
+    fracFr_beg = fracFr_begi;
     
     for(n=0;n<NUM_shls_tree;n++){
         k_idx_min[n] = Bs;
@@ -83,6 +85,20 @@ void Physics::setupPhysics(double alphai, double k0i, double gi, double alphabar
     
 }
 
+
+void Physics::inhomo_iLim(int n, double frac, double frac_beg, int *limB, int * limE){
+    
+    int i_beg,i_end,span;
+    i_beg = k_idx_min[n];
+    i_end = k_idx_max[n];
+    span = i_end-i_beg+1;
+    
+    *limB = i_beg + (int) span*frac_beg;
+    *limE = *limB + (int) span*frac -1;
+    
+};
+
+
 void Physics::delete_physics(){
     
     
@@ -108,8 +124,7 @@ Tree::Tree(){};
 
 
 void Tree::setupNodes(){
-    
-    
+
     int it,i,n,j,X,k;
     int Bs = 0;
     nds[0].has_pr = 0;
@@ -317,10 +332,13 @@ int func_hmdsi(double t, const double y[], double dydt[], void *params){
     
     Tree *T = param->tree;
     
+    
     complex<double> *dphidt=(complex<double> *)&dydt[0];
     complex<double> *phi=(complex<double> *)&y[0];
     
     int i,j,k,n,N,N_nds;
+    
+    int fr,limB,limE;
     
     complex<double> Ca,Cb,Cc,Sm,disp,Z_fl,frcng;
     
@@ -363,8 +381,14 @@ int func_hmdsi(double t, const double y[], double dydt[], void *params){
             // dissipations                                                                                                   
             disp  =  -(V->musm*pow(V->k_n[n],-6)+V->mubg*pow(V->k_n[n],4))*phi[i];
             
-            // forcing terms                                                                                                   
-            frcng = ( (n==V->fi || n==V->fi+1) ?  V->Fp : 0);
+            // forcing terms                           
+            // to incorporate for inhomogeneities
+            fr =0;
+            V->inhomo_iLim(n,V->fracFr, V->fracFr_beg, &limB, &limE);
+            if(i>=limB & i<=limE)
+                fr=1;
+            //
+            frcng = ( ((n==V->fi || n==V->fi+1) & fr==1)?  V->Fp : 0);
             
             dphidt[i] = Ca+Cb+Cc+disp+frcng;
             
