@@ -64,13 +64,14 @@ public:
     double alpha, beta,gamma, k0,g; //for spectrum
     double alphabar,q0; //for zonal flow
     int fi;
-    double Fp;
+    double Fp, fracFr, fracFr_beg;
     double musm,mubg;
     
     int *k_idx_min,*k_idx_max;
     double *k_n,*a_n,*b_n,*c_n;
     
-    void setupPhysics(double alphai, double k0i, double gi, double alphabari, double q0i, double mubgi, double musmi, double Fpi, int fii,Tree tree);
+    void setupPhysics(double alphai, double k0i, double gi, double alphabari, double q0i, double mubgi, double musmi, double Fpi, double fracFri, double fracFr_begi,int fii,Tree tree);
+    void inhomo_iLim(int n, double frac, double frac_beg, int *limB, int * limE);
     void delete_physics();
     
     Physics();
