@@ -1,0 +1,93 @@
+---
+INPUT FILE
+----------
+
+This is where the paramters are all determined 
+
+tree-shell hybrid model
+----------
+you need to specify the the following values where the default values are given in brakets in this readme file:
+
+1) Dimensions	    [2]  2 for 1d turbulence nad 4 for 2 turbulence
+
+1) Number of layers in tree [10]   
+
+2) Number of layers in shell [19]
+
+3) Minimum scale (k min) [0.03]   
+
+4) Maximum scale (k max)   [17305]
+
+
+2D turbulence
+-----------
+
+1) musmFac [0.01]
+is the small scale dissipation factor where the dissipation is musmFac*k_min^6
+
+2) mubgFac [10]
+is the large scale dissipation factor where the dissipation is mubgFac*k_max^-4
+
+3) fi shell [8] the shell where teh forcing is added (it is best if it is within the tree part of the structure)
+
+4) forcing magnitude [0.5]
+this is the forcing added on to the fi nad fi+1 shells. 
+
+5) frac_fr    [0.25] this is the fraction in space where the forcign is to be applied set to 1. if you want homogenous forcig (on all space with scale at fi) 
+
+6) frac_fr_begins [0.25] the fraction of space on which to start the forcign over frac_fr the rest of it. set to 0 when frac_fr is 1. 
+## for example: if you want to force the second quarter of the 1d turbulence over half then frac_fr = 0.5 and frac_fr_beg = 0.25. excerise your own judgement in making sure you dont force more than 100% of the space! so frac_fr + frac must be less than or equal to 1
+
+### frac_fr + frac_fr_begin <=1 
+
+extra   0
+
+
+the following parameters are part of the hw equation and can be modified by the user
+
+
+integration and openMP
+---------------------
+
+for specifying the integration parameters and number of threads for opemMP you need to specify
+
+1) Num of threads  [1] 
+depending on yout computer and number of nodes available. 
+
+2) dt       [20]
+is the time step for which the code will record the output. gsl is an adaptive time stepper but specifying dt is just for recording purposes
+
+3) t max    [150000]
+the code will continue to integrate the equations up to reaching the time t amx. resulting in t max/dt recordings
+
+------
+OUTPUT
+------
+
+the code will dump on the terminal the values of phi_n and n_n for a given scale k_n for each at the given value t. as well as two files efgh.txt and rslts.txt 
+
+output files
+------------
++ rslts.txt 
+for each of the layers in the tree and shells:  k_n, phi_n^2 (delimited by tabs) are recorded line after line.. where teh phi_n^2 is the average over all i at scale n. 
+
+at each time step up to tmax the recording continues without any seperation. so there are tmax/dt*N rows and 2 columns
+
+
+
+
+####  PLOTTING the results ######
+
+This is to create inputsPlot.txt for plotting. you can modify it after the run is over to make different plots, keeping the order in the file the same: First entry is number of layers in tree + number of layers in shell. Second entry is t1, the initial time step to start averaging the shells over to plot. Third entry is over how many time steps to average over. 
+
+LastN   [1000]  (averages over the LastN instances of the simulation) <-->IMPORTANT<--> set to -1 if you want to specify with following parameters:
+
+t1      [2]     (initial time to start averaging)
+
+Nav     [5]  (Num of instances to average over)
+
+extra   0
+
+
+
+
