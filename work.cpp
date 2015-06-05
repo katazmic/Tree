@@ -21,7 +21,7 @@ int main(){
     // inputs from tree structure
     int Dim, NUM_shls_tree, NUM_shls_goy, N_nds_tree, N_nds_goy, N_nds;
     
-    double alpha,k0,g,alphabar,q0,Fp,mubg,musm,mubgFac,musmFac;
+    double alpha,k0,g,alphabar,q0,Fp,mubg,musm,mubgFac,musmFac,frFr,frFr_b;
     int fi; // shell where to apply force.  
     Physics phys;
     Tree tree;
@@ -83,6 +83,14 @@ int main(){
     fInp = fopen("INPUT","r");
     Fp = get_data_NAME(fInp,"forcing magnitude");
     fclose(fInp);
+    
+    fInp = fopen("INPUT","r");
+    frFr = get_data_NAME(fInp,"frac_fr");
+    fclose(fInp);
+    
+    fInp = fopen("INPUT","r");
+    frFr_b = get_data_NAME(fInp,"frac_fr_begins");
+    fclose(fInp);
 
 
     N_nds_tree =  (int) ((int) pow( (double)Dim,(NUM_shls_tree))-1)/(Dim-1);
@@ -102,7 +110,7 @@ int main(){
     
     
     tree.setupTree(Dim,NUM_shls_tree,NUM_shls_goy);
-    phys.setupPhysics(alpha,k0,g,alphabar,q0,mubg,musm,Fp,fi,tree); 
+    phys.setupPhysics(alpha,k0,g,alphabar,q0,mubg,musm,Fp,frFr,frFr_b,fi,tree); 
 
     
    
