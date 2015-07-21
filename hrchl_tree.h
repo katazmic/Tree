@@ -43,7 +43,7 @@ public:
     int N_nds_tree,N_nds_goy, N_nds;
     
     Node *nds;
-    
+
     int find_n(int i);
     void setupNodes();    
     void setupTree(int DimIn, int NUM_tree, int NUM_goy);
@@ -52,7 +52,6 @@ public:
     
     Tree();
     ~Tree();
-    
     
 };
 
