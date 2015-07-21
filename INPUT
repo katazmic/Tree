@@ -10,7 +10,7 @@ Dimension			2
 
 Number of layers in tree	10  %%% set to 1 if you want the goy shell retrieved
 
-Number of layers as shell	19
+Number of layers as shell	17
 
 Minimum scale (k min)	1.
 
@@ -23,15 +23,15 @@ extra	0
 ------   2D TURBULENCE  -----
 -----------------------------
 
-musmFac	0.5 
+musmFac	5. 
 
-mubgFac	10.0
+mubgFac	1.0
 
-fi shell	8
+fi shell	6
 
-forcing magnitude	0.5	
+forcing magnitude	1.	
 
-frac_fr			0.25
+frac_fr			0.25  
 
 frac_fr_begins		0.25
 
@@ -44,9 +44,11 @@ extra	0
 
 Num of threads  1
 
-dt	 0.01
+dt	 0.1
 
-tmax	 200
+tmax	 10
+
+saveEvery	 1
 
 extra	0
 
@@ -56,13 +58,19 @@ extra	0
 ---------------------------------------
 
 
-LastN   1000  (averages over the LastN instances of the simulation) <-->IMPORTANT<--> set to -1 if you want to specify with following parameters:  
+LastN   500  (-1 to not consider as an option)
 
-t1	2     (initial time to start averaging) 
+t1	500     (initial time to start averaging) 
 
-Nav	5  (Num of instances to average over) 
+Nav	500  (Num of instances to average over) 
 
 extra	0
+
+
+
+
+
+
 
 
 
