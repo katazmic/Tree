@@ -339,8 +339,9 @@ int func_hmdsi(double t, const double y[], double dydt[], void *params){
     int i,j,k,n,N,N_nds;
     
     int fr,limB,limE;
-    
-    complex<double> Ca,Cb,Cc,Sm,disp,Z_fl,frcng;
+    double D;
+    D = 0.; 
+    complex<double> Ca,Cb,Cc,Sm,disp,Z_fl,frcng,diff;
     
     
     
@@ -389,8 +390,10 @@ int func_hmdsi(double t, const double y[], double dydt[], void *params){
                 fr=1;
             //
             frcng = ( ((n==V->fi || n==V->fi+1) & fr==1)?  V->Fp : 0);
-            
-            dphidt[i] = Ca+Cb+Cc+disp+frcng;
+            if(i>1 &i<N_nds-1)
+	      diff = ( (T->find_n(T->nds[i].i_pr) == T->find_n(T->nds[i-1].i_pr)  ) & (T->find_n(T->nds[i].i_pr) ==T->find_n(T->nds[i+1].i_pr) ) &(T->find_n(i)<T->NUM_shls_goy+T->NUM_shls_tree-3) ? -D*(phi[i-1] - 2.*phi[i] + phi[i+1]) : 0);
+	    //	    cout<<pow(2.,(int) 2*T->find_n(i))<<"\n"; 
+            dphidt[i] = Ca+Cb+Cc+disp+frcng+diff;
             
         }
         
