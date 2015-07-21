@@ -19,7 +19,7 @@ int main(){
     
     
     // inputs from tree structure
-    int Dim, NUM_shls_tree, NUM_shls_goy, N_nds_tree, N_nds_goy, N_nds;
+    int Dim, NUM_shls_tree, NUM_shls_goy, N_nds_tree, N_nds_goy, N_nds,dltSvd;
     
     double alpha,k0,g,alphabar,q0,Fp,mubg,musm,mubgFac,musmFac,frFr,frFr_b;
     int fi; // shell where to apply force.  
@@ -87,10 +87,12 @@ int main(){
     fInp = fopen("INPUT","r");
     frFr = get_data_NAME(fInp,"frac_fr");
     fclose(fInp);
+    cout<<frFr<<"\n";
     
     fInp = fopen("INPUT","r");
     frFr_b = get_data_NAME(fInp,"frac_fr_begins");
     fclose(fInp);
+    cout<<frFr_b<<"\n";
 
 
     N_nds_tree =  (int) ((int) pow( (double)Dim,(NUM_shls_tree))-1)/(Dim-1);
@@ -100,8 +102,7 @@ int main(){
     alpha = g*g;
 
     musm = musmFac*pow(k0,6);     
-    mubg = mubgFac*pow(k0*pow(g,NUM_shls_goy+NUM_shls_tree-1),-4)
-    ;
+    mubg = mubgFac*pow(k0*pow(g,NUM_shls_goy+NUM_shls_tree-1),-4);
     
 
     
@@ -128,7 +129,7 @@ int main(){
     
     
     const gsl_odeiv2_step_type *type_ptr = gsl_odeiv2_step_rk8pd;
-    
+
     
     gsl_odeiv2_step *step_ptr = gsl_odeiv2_step_alloc (type_ptr, dimension);
     gsl_odeiv2_control *control_ptr  = gsl_odeiv2_control_standard_new (eps_abs, eps_rel, 1.0,0.0);
@@ -160,7 +161,10 @@ int main(){
     fInp = fopen("INPUT","r");
     tmax = get_data_NAME(fInp,"tmax");
     fclose(fInp);
-
+    fInp = fopen("INPUT","r");
+    dltSvd = (int) get_data_NAME(fInp,"saveEvery");    
+    fclose(fInp);
+    
     tmin = 0;
     t=tmin;
     complex<double> *phi = (complex<double> *)&y[0];
@@ -172,6 +176,15 @@ int main(){
         phiAv[i] = 0;            
     }
     
+    for(i=0;i<N_nds-1;i++)
+        fprintf(rscmp,"%d \t", tree.find_n(i));
+    
+    fprintf(rscmp,"%d \n", tree.find_n(i));
+    
+    for(i=0;i<N_nds-1;i++)
+        fprintf(rscmp,"%e \t", phys.k_n[tree.find_n(i)]);
+    
+    fprintf(rscmp,"%e \n", phys.k_n[tree.find_n(i)]);
     
     for (t_next = tmin + delta_t; t_next <= tmax; t_next += delta_t)
     {
@@ -183,10 +196,10 @@ int main(){
             if (status != GSL_SUCCESS)
                 break;
         }
-        if(v>Nav){
+        if(v>dltSvd){
             v=0;
         }
-        std::scientific;
+        //        std::scientific;
         printf("%e\n",t/tmax*100.,"\%");
         
         n=0;
@@ -194,7 +207,7 @@ int main(){
         std::scientific;
         for(i=0;i<N_nds;i++){
             
-            phiAv[i] =  ((double) abs(phi[i])*abs(phi[i]))/((double) Nav);
+            phiAv[i] =  (double) abs(phi[i])*abs(phi[i]);
             
             if((i>phys.k_idx_max[n-1]) || i==0){
                 fprintf(rs,"%e \t %e \n", phys.k_n[n], abs(phi[i])*abs(phi[i]));
@@ -202,29 +215,34 @@ int main(){
             }
         }
         
-        //Print the entire wavelet to file: averaged over Nav;
+        //Print the entire wavelet to file: at every dltSvd times;
         if(v==0){
-            for(i=phys.k_idx_min[NUM_shls_tree+NUM_shls_goy-1];i<phys.k_idx_max[NUM_shls_tree+NUM_shls_goy-1]+1;i++){
-                j=i;
-                while(tree.nds[j].has_pr!=0){
-                    fprintf(rscmp,"%e \t", phiAv[j]);
-                    j=tree.nds[j].i_pr;
-                }
-                fprintf(rscmp,"%e \n", phiAv[j]);
-                
-                
-            }
             
-            for(i=0;i<N_nds;i++)
-                phiAv[i] = 0;
+            /*            for(i=phys.k_idx_min[NUM_shls_tree+NUM_shls_goy-1];i<phys.k_idx_max[NUM_shls_tree+NUM_shls_goy-1]+1;i++){
+             j=i;
+             while(tree.nds[j].has_pr!=0){
+             fprintf(rscmp,"%e \t", phiAv[j]);
+             j=tree.nds[j].i_pr;
+             }
+             fprintf(rscmp,"%e \n", phiAv[j]);
+             */
+            for(i=0;i<N_nds-1;i++)
+                fprintf(rscmp,"%e \t", phiAv[i]);
+            
+            fprintf(rscmp,"%e \n", phiAv[i]);
+            
         }
         
+        for(i=0;i<N_nds;i++)
+            phiAv[i] = 0;
         
     }
     
+        
+    
     /// input for plotting 
     
-    int iniT,NtAv,LstN;
+    int iniT,NtAv,LstN,Nxcmp;
     double allT;
     
     fInp = fopen("INPUT","r");
@@ -238,7 +256,16 @@ int main(){
     fInp = fopen("INPUT","r");
     LstN = (int) get_data_NAME(fInp,"LastN");    
     fclose(fInp);
+
+    fInp = fopen("INPUT","r");
+    frFr_b = (int) get_data_NAME(fInp,"frac_fr_begins");
+    fclose(fInp);
+
+    fInp = fopen("INPUT","r");
+    frFr = (int) get_data_NAME(fInp,"frac_fr");
+    fclose(fInp);
     
+
     allT = tmax/delta_t;
     
     
@@ -248,7 +275,9 @@ int main(){
     }
     
     
-    fprintf(inpPlot,"%d \t %d \t %d \t",NUM_shls_goy+NUM_shls_tree,iniT,NtAv);
+    Nxcmp  = phys.k_idx_max[NUM_shls_tree+NUM_shls_goy-1]-phys.k_idx_min[NUM_shls_tree+NUM_shls_goy-1]+1;
+    
+    fprintf(inpPlot,"%d \t %d \t %d \t %d \t %e \t %e \t",NUM_shls_goy+NUM_shls_tree,iniT,NtAv,Nxcmp, frFr,frFr_b );
     
     // all done; free up the gsl_odeiv stuff                                                                                 
     gsl_odeiv2_evolve_free (evolve_ptr);
